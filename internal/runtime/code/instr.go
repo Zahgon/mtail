@@ -4,8 +4,6 @@
 // Package code contains the bytecode instructions for the mtail virtual machine.
 package code
 
-import "fmt"
-
 type Instr struct {
 	Opcode     Opcode
 	Operand    interface{}
@@ -13,6 +11,4 @@ type Instr struct {
 }
 
 // debug print for instructions.
-func (i Instr) String() string {
-	return fmt.Sprintf("{%s %v %d}", opNames[i.Opcode], i.Operand, i.SourceLine)
-}
+func (i Instr) String() string { _ = "STUB: not implemented"; return "" }

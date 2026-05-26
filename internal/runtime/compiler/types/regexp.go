@@ -10,10 +10,6 @@ import (
 // ParseRegexp ensures we use the same regexp syntax.Flags across all
 // invocations of this method.
 func ParseRegexp(pattern string) (re *syntax.Regexp, err error) {
-	re, err = syntax.Parse(pattern, syntax.Perl)
-	if err != nil {
-		return
-	}
-	re = re.Simplify()
-	return
+	_ = "STUB: not implemented"
+	return nil, nil
 }

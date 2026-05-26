@@ -4,11 +4,7 @@
 package tailer
 
 import (
-	"expvar"
-	"html/template"
 	"io"
-
-	"github.com/google/mtail/internal/tailer/logstream"
 )
 
 const tailerTemplate = `
@@ -41,44 +37,4 @@ const tailerTemplate = `
 `
 
 // WriteStatusHTML emits the Tailer's state in HTML format to the io.Writer w.
-func (t *Tailer) WriteStatusHTML(w io.Writer) error {
-	tpl, err := template.New("tailer").Parse(tailerTemplate)
-	if err != nil {
-		return err
-	}
-	t.logstreamsMu.RLock()
-	defer t.logstreamsMu.RUnlock()
-	t.globPatternsMu.RLock()
-	defer t.globPatternsMu.RUnlock()
-	data := struct {
-		LogStreams map[string]logstream.LogStream
-		Patterns   map[string]struct{}
-		Opens      map[string]string
-		Lines      map[string]string
-		Errors     map[string]string
-		Truncs     map[string]string
-	}{
-		t.logstreams,
-		t.globPatterns,
-		make(map[string]string),
-		make(map[string]string),
-		make(map[string]string),
-		make(map[string]string),
-	}
-	for _, pair := range []struct {
-		k string
-		m map[string]string
-	}{
-		{"log_errors_total", data.Errors},
-		{"log_opens_total", data.Opens},
-		{"file_truncates_total", data.Truncs},
-		{"log_lines_total", data.Lines},
-	} {
-		pair := pair
-		v := expvar.Get(pair.k).(*expvar.Map)
-		v.Do(func(kv expvar.KeyValue) {
-			pair.m[kv.Key] = kv.Value.String()
-		})
-	}
-	return tpl.Execute(w, data)
-}
+func (t *Tailer) WriteStatusHTML(w io.Writer) error { _ = "STUB: not implemented"; return nil }

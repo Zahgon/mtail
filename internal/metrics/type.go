@@ -24,21 +24,10 @@ const (
 	endType // end of enumeration for testing
 )
 
-func (t Type) String() string {
-	switch t {
-	case Int:
-		return "Int"
-	case Float:
-		return "Float"
-	case String:
-		return "String"
-	case Buckets:
-		return "Buckets"
-	}
-	return "?"
-}
+func (t Type) String() string { _ = "STUB: not implemented"; return "" }
 
 // Generate implements the quick.Generator interface for Type.
 func (Type) Generate(rand *rand.Rand, _ int) reflect.Value {
-	return reflect.ValueOf(Type(rand.Intn(int(endType))))
+	_ = "STUB: not implemented"
+	return *new(reflect.Value)
 }

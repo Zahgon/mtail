@@ -3,11 +3,6 @@
 
 package mtail
 
-import (
-	"fmt"
-	"runtime"
-)
-
 // BuildInfo records the compile-time information for use when reporting the mtail version.
 type BuildInfo struct {
 	Branch   string
@@ -15,13 +10,4 @@ type BuildInfo struct {
 	Revision string
 }
 
-func (b BuildInfo) String() string {
-	return fmt.Sprintf(
-		"mtail version %s git revision %s go version %s go arch %s go os %s",
-		b.Version,
-		b.Revision,
-		runtime.Version(),
-		runtime.GOARCH,
-		runtime.GOOS,
-	)
-}
+func (b BuildInfo) String() string { _ = "STUB: not implemented"; return "" }

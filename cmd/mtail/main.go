@@ -10,7 +10,6 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
-	"strings"
 	"syscall"
 	"time"
 
@@ -24,16 +23,9 @@ import (
 
 type seqStringFlag []string
 
-func (f *seqStringFlag) String() string {
-	return fmt.Sprint(*f)
-}
+func (f *seqStringFlag) String() string { _ = "STUB: not implemented"; return "" }
 
-func (f *seqStringFlag) Set(value string) error {
-	for _, v := range strings.Split(value, ",") {
-		*f = append(*f, v)
-	}
-	return nil
-}
+func (f *seqStringFlag) Set(value string) error { _ = "STUB: not implemented"; return nil }
 
 var logs seqStringFlag
 

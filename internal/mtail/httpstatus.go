@@ -4,10 +4,7 @@
 package mtail
 
 import (
-	"html/template"
 	"net/http"
-
-	"github.com/golang/glog"
 )
 
 const statusTemplate = `
@@ -32,55 +29,9 @@ const statusTemplateEnd = `
 // ServeHTTP satisfies the http.Handler interface, and is used to serve the
 // root page of mtail for online status reporting.
 func (m *Server) ServeHTTP(w http.ResponseWriter, _ *http.Request) {
-	t, err := template.New("status").Parse(statusTemplate)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	te, err := template.New("statusend").Parse(statusTemplateEnd)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	data := struct {
-		BindAddress        string
-		BuildInfo          string
-		HTTPDebugEndpoints bool
-		HTTPInfoEndpoints  bool
-	}{
-		m.listener.Addr().String(),
-		m.buildInfo.String(),
-		m.httpDebugEndpoints,
-		m.httpInfoEndpoints,
-	}
-	w.Header().Add("Content-type", "text/html")
-	w.WriteHeader(http.StatusOK)
-	if err = t.Execute(w, data); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	if m.httpInfoEndpoints {
-		err = m.r.WriteStatusHTML(w)
-		if err != nil {
-			glog.Warningf("Error while writing loader status: %s", err)
-		}
-		err = m.t.WriteStatusHTML(w)
-		if err != nil {
-			glog.Warningf("Error while writing tailer status: %s", err)
-		}
-	}
-
-	if err = te.Execute(w, data); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // FaviconHandler is used to serve up the favicon.ico for mtail's http server.
-func FaviconHandler(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Content-Type", "image/x-icon")
-	w.Header().Set("Cache-Control", "public, max-age=7776000")
-	if _, err := w.Write(logoFavicon); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-}
+func FaviconHandler(w http.ResponseWriter, _ *http.Request) { _ = "STUB: not implemented"; return }

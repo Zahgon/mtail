@@ -6,8 +6,6 @@ package waker
 import (
 	"context"
 	"sync"
-
-	"github.com/golang/glog"
 )
 
 // A testWaker is used to manually signal to idle routines it's time to look
@@ -40,100 +38,37 @@ type WakeFunc func(int, int)
 // `wait` says how many wakees are expected to be waiting before the first `wakeFunc` call.
 // `name` gives it a name for debug log messages
 func NewTest(ctx context.Context, wait int, name string) (Waker, WakeFunc) {
-	t := &testWaker{
-		ctx:        ctx,
-		name:       name,
-		wakeeReady: make(chan struct{}),
-		wakeeDone:  make(chan struct{}),
-		waiting:    make(chan struct{}),
-		wake:       make(chan struct{}),
-	}
-	initDone := make(chan struct{})
-	go func() {
-		defer close(initDone)
-		glog.Infof("TestWaker(%s) init waiting for %d wakees to call Wake()", t.name, wait)
-		for i := 0; i < wait; i++ {
-			<-t.wakeeDone
-		}
-	}()
-	// awaken issues a wakeup signal to the "wakees", those clients who've used
-	// the `Wake` call.  wake is the number of wakees we expect to wake up,
-	// wait is the number of wakees to wait for before returning.
-	awaken := func(wake, wait int) {
-		<-initDone
-		glog.InfoDepthf(1, "TestWaker(%s) yielding to Wakee", t.name)
-		for i := 0; i < wake; i++ {
-			t.waiting <- struct{}{}
-		}
-		// First wait for `t.n` wakees to have called `Wake`, synchronising them.
-		glog.InfoDepthf(1, "TestWaker(%s) waiting for %d wakees to receive from the wake chan", t.name, wake)
-		for i := 0; i < wake; i++ {
-			<-t.wakeeReady
-		}
-		t.broadcastWakeAndReset()
-		// Now `awaken` blocks here, as we wait for them in turn to return to another call to Wake, in their polling loops.  We wait for only a count of `after` routines this time, as some may exit.
-		glog.InfoDepthf(1, "TestWaker(%s) waiting for %d wakees to call Wake()", t.name, wait)
-		for i := 0; i < wait; i++ {
-			<-t.wakeeDone
-		}
-		glog.InfoDepthf(1, "TestWaker(%s): Wakees returned, yielding to TestWaker", t.name)
-	}
-	return t, awaken
+	_ = "STUB: not implemented"
+	return *new(Waker), *new(WakeFunc)
 }
+
+// awaken issues a wakeup signal to the "wakees", those clients who've used
+// the `Wake` call.  wake is the number of wakees we expect to wake up,
+// wait is the number of wakees to wait for before returning.
+
+// First wait for `t.n` wakees to have called `Wake`, synchronising them.
+
+// Now `awaken` blocks here, as we wait for them in turn to return to another call to Wake, in their polling loops.  We wait for only a count of `after` routines this time, as some may exit.
 
 // Wake satisfies the Waker interface.
-func (t *testWaker) Wake() (w <-chan struct{}) {
-	t.mu.Lock()
-	w = t.wake
-	t.mu.Unlock()
-	glog.InfoDepthf(1, "Wakee on TestWaker(%s) waiting for wakeup on chan %p", t.name, w)
-	// Background this so we can return the wake channel.
-	// The wakeFunc won't close the channel until this completes.
-	go func() {
-		// Signal we've reentered Wake.  wakeFunc can't return until we do this.
-		select {
-		case <-t.ctx.Done():
-			return
-		case t.wakeeDone <- struct{}{}:
-		}
-		// Block wakees here until a subsequent wakeFunc is called.
-		select {
-		case <-t.ctx.Done():
-			return
-		case <-t.waiting:
-		}
-		// Signal we've got the wake chan, telling wakeFunc it can now issue a broadcast.
-		select {
-		case <-t.ctx.Done():
-			return
-		case t.wakeeReady <- struct{}{}:
-		}
-	}()
-	return
-}
+func (t *testWaker) Wake() (w <-chan struct{}) { _ = "STUB: not implemented"; return nil }
 
-func (t *testWaker) broadcastWakeAndReset() {
-	t.mu.Lock()
-	defer t.mu.Unlock()
-	glog.Infof("TestWaker(%s) broadcasting wake to chan %p", t.name, t.wake)
-	close(t.wake)
-	t.wake = make(chan struct{})
-	glog.Infof("TestWaker(%s) wake channel reset to chan %p", t.name, t.wake)
-}
+// Background this so we can return the wake channel.
+// The wakeFunc won't close the channel until this completes.
+
+// Signal we've reentered Wake.  wakeFunc can't return until we do this.
+
+// Block wakees here until a subsequent wakeFunc is called.
+
+// Signal we've got the wake chan, telling wakeFunc it can now issue a broadcast.
+
+func (t *testWaker) broadcastWakeAndReset() { _ = "STUB: not implemented"; return }
 
 // alwaysWaker never blocks the wakee.
 type alwaysWaker struct {
 	wake chan struct{}
 }
 
-func NewTestAlways() Waker {
-	w := &alwaysWaker{
-		wake: make(chan struct{}),
-	}
-	close(w.wake)
-	return w
-}
+func NewTestAlways() Waker { _ = "STUB: not implemented"; return *new(Waker) }
 
-func (w *alwaysWaker) Wake() <-chan struct{} {
-	return w.wake
-}
+func (w *alwaysWaker) Wake() <-chan struct{} { _ = "STUB: not implemented"; return nil }

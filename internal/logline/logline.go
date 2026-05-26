@@ -15,5 +15,6 @@ type LogLine struct {
 
 // New creates a new LogLine object.
 func New(ctx context.Context, filename string, line string) *LogLine {
-	return &LogLine{ctx, filename, line}
+	_ = "STUB: not implemented"
+	return nil
 }

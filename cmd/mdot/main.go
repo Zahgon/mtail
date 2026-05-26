@@ -25,14 +25,10 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"path/filepath"
-	"strings"
 
 	"github.com/golang/glog"
 	"github.com/google/mtail/internal/mtail"
 	"github.com/google/mtail/internal/runtime/compiler/ast"
-	"github.com/google/mtail/internal/runtime/compiler/checker"
-	"github.com/google/mtail/internal/runtime/compiler/parser"
 )
 
 var (
@@ -46,110 +42,23 @@ type dotter struct {
 	parentID []int // id of the parent node
 }
 
-func (d *dotter) nextID() int {
-	d.id++
-	return d.id
-}
+func (d *dotter) nextID() int { _ = "STUB: not implemented"; return 0 }
 
-func (d *dotter) emitNode(id int, node ast.Node) {
-	attrs := map[string]string{
-		"label":   strings.Split(fmt.Sprintf("%T", node), ".")[1] + "\n",
-		"shape":   "box",
-		"style":   "filled",
-		"tooltip": node.Type().String(),
-	}
-	switch n := node.(type) {
-	case *ast.VarDecl, *ast.DecoDecl:
-		attrs["fillcolor"] = "lightgreen"
-		switch n := n.(type) {
-		case *ast.VarDecl:
-			attrs["label"] += fmt.Sprintf("%s %s", n.Kind, n.Name)
-		case *ast.DecoDecl:
-			attrs["label"] += n.Name
-		}
-	case *ast.IDTerm, *ast.CaprefTerm:
-		attrs["fillcolor"] = "pink"
-		attrs["shape"] = "ellipse"
-		switch n := n.(type) {
-		case *ast.IDTerm:
-			attrs["label"] += n.Name
-		case *ast.CaprefTerm:
-			attrs["label"] += fmt.Sprintf("$%s", n.Name)
-		}
-	case *ast.IntLit, *ast.FloatLit, *ast.PatternLit, *ast.StringLit:
-		attrs["fillcolor"] = "pink"
-		attrs["shape"] = "ellipse"
-		switch n := n.(type) {
-		case *ast.IntLit:
-			attrs["label"] += fmt.Sprintf("%d", n.I)
-		case *ast.FloatLit:
-			attrs["label"] += fmt.Sprintf("%g", n.F)
-		case *ast.PatternLit:
-			attrs["label"] += fmt.Sprintf("/%s/", n.Pattern)
-		case *ast.StringLit:
-			attrs["label"] += n.Text
-		}
-	case *ast.IndexedExpr, *ast.BinaryExpr, *ast.UnaryExpr, *ast.PatternExpr, *ast.BuiltinExpr:
-		attrs["fillcolor"] = "lightblue"
-		switch n := n.(type) {
-		case *ast.BinaryExpr:
-			attrs["label"] += parser.Kind(n.Op).String()
-		case *ast.UnaryExpr:
-			attrs["label"] += parser.Kind(n.Op).String()
-		case *ast.BuiltinExpr:
-			attrs["label"] += n.Name
-		}
-	}
-	pos := node.Pos()
-	if pos != nil {
-		attrs["xlabel"] = pos.String()
-	}
-	fmt.Fprintf(d.w, "n%d [", id)
-	for k, v := range attrs {
-		fmt.Fprintf(d.w, "%s=\"%s\" ", k, v)
-	}
-	fmt.Fprintf(d.w, "]\n")
-}
+func (d *dotter) emitNode(id int, node ast.Node) { _ = "STUB: not implemented"; return }
 
-func (d *dotter) emitLine(src, dst int) {
-	fmt.Fprintf(d.w, "n%d -> n%d\n", src, dst)
-}
+func (d *dotter) emitLine(src, dst int) { _ = "STUB: not implemented"; return }
 
 func (d *dotter) VisitBefore(node ast.Node) (ast.Visitor, ast.Node) {
-	id := d.nextID()
-	d.emitNode(id, node)
-	if len(d.parentID) > 0 {
-		parentID := d.parentID[len(d.parentID)-1]
-		d.emitLine(parentID, id)
-	}
-	d.parentID = append(d.parentID, id)
-	return d, node
+	_ = "STUB: not implemented"
+	return *new(ast.Visitor), *new(ast.Node)
 }
 
 func (d *dotter) VisitAfter(node ast.Node) ast.Node {
-	d.parentID = d.parentID[:len(d.parentID)-1]
-	return node
+	_ = "STUB: not implemented"
+	return *new(ast.Node)
 }
 
-func makeDot(name string, w io.Writer) error {
-	f, err := os.Open(filepath.Clean(name))
-	if err != nil {
-		return err
-	}
-	n, err := parser.Parse(name, f)
-	if err != nil {
-		return err
-	}
-	n, err = checker.Check(n, 0, 0)
-	if err != nil {
-		return err
-	}
-	fmt.Fprintf(w, "digraph \"%s\" {\n", *prog)
-	dot := &dotter{w: w}
-	ast.Walk(dot, n)
-	fmt.Fprintf(w, "}\n")
-	return nil
-}
+func makeDot(name string, w io.Writer) error { _ = "STUB: not implemented"; return nil }
 
 func main() {
 	flag.Parse()

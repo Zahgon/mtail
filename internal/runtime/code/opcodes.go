@@ -142,6 +142,4 @@ var opNames = map[Opcode]string{
 	Rsubst:      "rsubst",
 }
 
-func (o Opcode) String() string {
-	return opNames[o]
-}
+func (o Opcode) String() string { _ = "STUB: not implemented"; return "" }

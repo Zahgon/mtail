@@ -4,11 +4,7 @@
 package errors
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/google/mtail/internal/runtime/compiler/position"
-	"github.com/pkg/errors"
 )
 
 type compileError struct {
@@ -16,41 +12,18 @@ type compileError struct {
 	msg string
 }
 
-func (e compileError) Error() string {
-	return e.pos.String() + ": " + e.msg
-}
+func (e compileError) Error() string { _ = "STUB: not implemented"; return "" }
 
 // ErrorList contains a list of compile errors.
 type ErrorList []*compileError
 
 // Add appends an error at a position to the list of errors.
-func (p *ErrorList) Add(pos *position.Position, msg string) {
-	if pos == nil {
-		pos = &position.Position{"", -1, -1, -1}
-	}
-	*p = append(*p, &compileError{*pos, msg})
-}
+func (p *ErrorList) Add(pos *position.Position, msg string) { _ = "STUB: not implemented"; return }
 
 // Append puts an ErrorList on the end of this ErrorList.
-func (p *ErrorList) Append(l ErrorList) {
-	*p = append(*p, l...)
-}
+func (p *ErrorList) Append(l ErrorList) { _ = "STUB: not implemented"; return }
 
 // ErrorList implements the error interface.
-func (p ErrorList) Error() string {
-	switch len(p) {
-	case 0:
-		return "no errors"
-	case 1:
-		return p[0].Error()
-	}
-	var r strings.Builder
-	for _, e := range p {
-		r.WriteString(fmt.Sprintf("%s\n", e))
-	}
-	return r.String()[:r.Len()-1]
-}
+func (p ErrorList) Error() string { _ = "STUB: not implemented"; return "" }
 
-func Errorf(format string, args ...interface{}) error {
-	return errors.Errorf(format, args...)
-}
+func Errorf(format string, args ...interface{}) error { _ = "STUB: not implemented"; return nil }

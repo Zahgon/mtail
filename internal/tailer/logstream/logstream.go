@@ -12,12 +12,8 @@ import (
 	"context"
 	"errors"
 	"expvar"
-	"fmt"
-	"net/url"
-	"os"
 	"sync"
 
-	"github.com/golang/glog"
 	"github.com/google/mtail/internal/logline"
 	"github.com/google/mtail/internal/waker"
 )
@@ -62,62 +58,12 @@ const (
 // notify the `wg` when it is Done.  `oneShot` is used for testing and only
 // works for regular files that can be seeked.
 func New(ctx context.Context, wg *sync.WaitGroup, waker waker.Waker, pathname string, oneShot OneShotMode) (LogStream, error) {
-	if wg == nil {
-		return nil, ErrNeedsWaitgroup
-	}
-	u, err := url.Parse(pathname)
-	if err != nil {
-		return nil, err
-	}
-	glog.Infof("Parsed url as %v", u)
-
-	path := pathname
-	switch u.Scheme {
-	default:
-		glog.V(2).Infof("%v: %q in path pattern %q, treating as path", ErrUnsupportedURLScheme, u.Scheme, pathname)
-	case "unixgram":
-		return newDgramStream(ctx, wg, waker, u.Scheme, u.Path, oneShot)
-	case "unix":
-		return newSocketStream(ctx, wg, waker, u.Scheme, u.Path, oneShot)
-	case "tcp":
-		return newSocketStream(ctx, wg, waker, u.Scheme, u.Host, oneShot)
-	case "udp":
-		return newDgramStream(ctx, wg, waker, u.Scheme, u.Host, oneShot)
-	case "", "file":
-		path = u.Path
-	}
-	if IsStdinPattern(path) {
-		fi, err := os.Stdin.Stat()
-		if err != nil {
-			logErrors.Add(path, 1)
-			return nil, err
-		}
-		return newFifoStream(ctx, wg, waker, path, fi)
-	}
-	fi, err := os.Stat(path)
-	if err != nil {
-		logErrors.Add(path, 1)
-		return nil, err
-	}
-	switch m := fi.Mode(); {
-	case m.IsRegular():
-		return newFileStream(ctx, wg, waker, path, fi, oneShot)
-	case m&os.ModeType == os.ModeNamedPipe:
-		return newFifoStream(ctx, wg, waker, path, fi)
-	// TODO(jaq): in order to listen on an existing socket filepath, we must unlink and recreate it
-	// case m&os.ModeType == os.ModeSocket:
-	// 	return newSocketStream(ctx, wg, waker, pathname)
-	default:
-		return nil, fmt.Errorf("%w: %q", ErrUnsupportedFileType, pathname)
-	}
+	_ = "STUB: not implemented"
+	return *new(LogStream), nil
 }
 
-func IsStdinPattern(pattern string) bool {
-	if pattern == stdinPattern {
-		return true
-	}
-	if pattern == "/dev/stdin" {
-		return true
-	}
-	return false
-}
+// TODO(jaq): in order to listen on an existing socket filepath, we must unlink and recreate it
+// case m&os.ModeType == os.ModeSocket:
+// 	return newSocketStream(ctx, wg, waker, pathname)
+
+func IsStdinPattern(pattern string) bool { _ = "STUB: not implemented"; return false }

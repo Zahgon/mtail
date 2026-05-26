@@ -4,9 +4,7 @@
 package datum
 
 import (
-	"encoding/json"
 	"sync"
-	"sync/atomic"
 	"time"
 )
 
@@ -18,30 +16,17 @@ type String struct {
 }
 
 // Set sets the value of the String to the value at timestamp.
-func (d *String) Set(value string, timestamp time.Time) {
-	d.mu.Lock()
-	d.Value = value
-	d.stamp(timestamp)
-	d.mu.Unlock()
-}
+func (d *String) Set(value string, timestamp time.Time) { _ = "STUB: not implemented"; return }
 
 // Get returns the value of the String.
-func (d *String) Get() string {
-	d.mu.RLock()
-	defer d.mu.RUnlock()
-	return d.Value
-}
+func (d *String) Get() string { _ = "STUB: not implemented"; return "" }
 
 // ValueString returns the value of the String as a string.
 func (d *String) ValueString() string {
-	return d.Get()
+	_ = "STUB: not implemented"
+
+	// MarshalJSON returns a JSON encoding of the String.
+	return ""
 }
 
-// MarshalJSON returns a JSON encoding of the String.
-func (d *String) MarshalJSON() ([]byte, error) {
-	j := struct {
-		Value string
-		Time  int64
-	}{d.Get(), atomic.LoadInt64(&d.Time)}
-	return json.Marshal(j)
-}
+func (d *String) MarshalJSON() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }

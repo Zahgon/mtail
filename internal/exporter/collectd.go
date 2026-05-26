@@ -6,8 +6,6 @@ package exporter
 import (
 	"expvar"
 	"flag"
-	"fmt"
-	"strings"
 	"time"
 
 	"github.com/google/mtail/internal/metrics"
@@ -31,20 +29,8 @@ var (
 // metricToCollectd encodes the metric data in the collectd text protocol format.  The
 // metric lock is held before entering this function.
 func metricToCollectd(hostname string, m *metrics.Metric, l *metrics.LabelSet, interval time.Duration) string {
-	return fmt.Sprintf(collectdFormat,
-		hostname,
-		*collectdPrefix,
-		m.Program,
-		kindToCollectdType(m.Kind),
-		formatLabels(m.Name, l.Labels, "-", "-", "_"),
-		int64(interval.Seconds()),
-		l.Datum.TimeString(),
-		l.Datum.ValueString())
+	_ = "STUB: not implemented"
+	return ""
 }
 
-func kindToCollectdType(kind metrics.Kind) string {
-	if kind != metrics.Timer {
-		return strings.ToLower(kind.String())
-	}
-	return "gauge"
-}
+func kindToCollectdType(kind metrics.Kind) string { _ = "STUB: not implemented"; return "" }

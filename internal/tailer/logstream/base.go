@@ -15,6 +15,4 @@ type streamBase struct {
 
 // Lines returns the output log line channel for this stream.  The stream is
 // completed when this channel closes.
-func (s *streamBase) Lines() <-chan *logline.LogLine {
-	return s.lines
-}
+func (s *streamBase) Lines() <-chan *logline.LogLine { _ = "STUB: not implemented"; return nil }

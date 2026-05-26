@@ -9,37 +9,34 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
-func Diff(a, b interface{}, opts ...cmp.Option) string {
-	return cmp.Diff(a, b, opts...)
-}
+func Diff(a, b interface{}, opts ...cmp.Option) string { _ = "STUB: not implemented"; return "" }
 
 func IgnoreUnexported(types ...interface{}) cmp.Option {
-	return cmpopts.IgnoreUnexported(types...)
+	_ = "STUB: not implemented"
+	return *new(cmp.Option)
 }
 
 func AllowUnexported(types ...interface{}) cmp.Option {
-	return cmp.AllowUnexported(types...)
+	_ = "STUB: not implemented"
+	return *new(cmp.Option)
 }
 
 func IgnoreFields(typ interface{}, names ...string) cmp.Option {
-	return cmpopts.IgnoreFields(typ, names...)
+	_ = "STUB: not implemented"
+	return *new(cmp.Option)
 }
 
 func SortSlices(lessFunc interface{}) cmp.Option {
-	return cmpopts.SortSlices(lessFunc)
+	_ = "STUB: not implemented"
+	return *new(cmp.Option)
 }
 
 // ExpectNoDiff tests to see if the two interfaces have no diff.
 // If there is no diff, the retrun value is true.
 // If there is a diff, it is logged to tb and an error is flagged, and the return value is false.
 func ExpectNoDiff(tb testing.TB, a, b interface{}, opts ...cmp.Option) bool {
-	tb.Helper()
-	if diff := Diff(a, b, opts...); diff != "" {
-		tb.Errorf("Unexpected diff, -want +got:\n%s", diff)
-		return false
-	}
-	return true
+	_ = "STUB: not implemented"
+	return false
 }

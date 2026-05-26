@@ -5,17 +5,12 @@ package mtail
 
 import (
 	"errors"
-	"net"
-	"os"
-	"path/filepath"
 	"time"
 
-	"contrib.go.opencensus.io/exporter/jaeger"
 	"github.com/google/mtail/internal/exporter"
 	"github.com/google/mtail/internal/runtime"
 	"github.com/google/mtail/internal/tailer"
 	"github.com/google/mtail/internal/waker"
-	"go.opencensus.io/trace"
 )
 
 // Option configures mtail.Server.
@@ -26,38 +21,22 @@ type Option interface {
 // ProgramPath sets the path to find mtail programs in the Server.
 type ProgramPath string
 
-func (opt ProgramPath) apply(m *Server) error {
-	m.programPath = filepath.Clean(string(opt))
-	if _, err := os.Stat(m.programPath); os.IsNotExist(err) {
-		return err
-	}
-	return nil
-}
+func (opt ProgramPath) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // LogPathPatterns sets the patterns to find log paths in the Server.
-func LogPathPatterns(patterns ...string) Option {
-	return logPathPatterns(patterns)
-}
+func LogPathPatterns(patterns ...string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 type logPathPatterns []string
 
-func (opt logPathPatterns) apply(m *Server) error {
-	m.tOpts = append(m.tOpts, tailer.LogPatterns(opt))
-	return nil
-}
+func (opt logPathPatterns) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // IgnoreRegexPattern sets the regex pattern to ignore files.
 type IgnoreRegexPattern string
 
-func (opt IgnoreRegexPattern) apply(m *Server) error {
-	m.tOpts = append(m.tOpts, tailer.IgnoreRegex(string(opt)))
-	return nil
-}
+func (opt IgnoreRegexPattern) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // BindAddress sets the HTTP server address in Server.
-func BindAddress(address, port string) Option {
-	return &bindAddress{address, port}
-}
+func BindAddress(address, port string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 type bindAddress struct {
 	address, port string
@@ -65,85 +44,50 @@ type bindAddress struct {
 
 var ErrDuplicateHTTPBindAddress = errors.New("HTTP server bind address already supplied")
 
-func (opt bindAddress) apply(m *Server) error {
-	if m.listener != nil {
-		return ErrDuplicateHTTPBindAddress
-	}
-	bindAddress := net.JoinHostPort(opt.address, opt.port)
-	var err error
-	m.listener, err = net.Listen("tcp", bindAddress)
-	return err
-}
+func (opt bindAddress) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // BindUnixSocket sets the UNIX socket path in Server.
 type BindUnixSocket string
 
-func (opt BindUnixSocket) apply(m *Server) error {
-	if m.listener != nil {
-		return ErrDuplicateHTTPBindAddress
-	}
-	var err error
-	m.listener, err = net.Listen("unix", string(opt))
-	return err
-}
+func (opt BindUnixSocket) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // SetBuildInfo sets the mtail program build information in the Server.
 type SetBuildInfo BuildInfo
 
-func (opt SetBuildInfo) apply(m *Server) error {
-	m.buildInfo = BuildInfo(opt)
-	return nil
-}
+func (opt SetBuildInfo) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // OverrideLocation sets the timezone location for log timestamps without any such information.
-func OverrideLocation(loc *time.Location) Option {
-	return &overrideLocation{loc}
-}
+func OverrideLocation(loc *time.Location) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 type overrideLocation struct {
 	*time.Location
 }
 
-func (opt overrideLocation) apply(m *Server) error {
-	m.rOpts = append(m.rOpts, runtime.OverrideLocation(opt.Location))
-	return nil
-}
+func (opt overrideLocation) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // LogPatternPollWaker triggers polls on the filesystem for new logs that match the log glob patterns.
-func LogPatternPollWaker(w waker.Waker) Option {
-	return &logPatternPollWaker{w}
-}
+func LogPatternPollWaker(w waker.Waker) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 type logPatternPollWaker struct {
 	waker.Waker
 }
 
-func (opt logPatternPollWaker) apply(m *Server) error {
-	m.tOpts = append(m.tOpts, tailer.LogPatternPollWaker(opt.Waker))
-	return nil
-}
+func (opt logPatternPollWaker) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // LogstreamPollWaker triggers polls on the filesystem for new logs that match the log glob streams.
-func LogstreamPollWaker(w waker.Waker) Option {
-	return &logstreamPollWaker{w}
-}
+func LogstreamPollWaker(w waker.Waker) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 type logstreamPollWaker struct {
 	waker.Waker
 }
 
-func (opt logstreamPollWaker) apply(m *Server) error {
-	m.tOpts = append(m.tOpts, tailer.LogstreamPollWaker(opt.Waker))
-	return nil
-}
+func (opt logstreamPollWaker) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 type niladicOption struct {
 	applyfunc func(m *Server) error
 }
 
-func (n *niladicOption) apply(m *Server) error {
-	return n.applyfunc(m)
-}
+func (n *niladicOption) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // OneShot sets one-shot mode in the Server.
 var OneShot = &niladicOption{
@@ -249,40 +193,19 @@ var LogRuntimeErrors = &niladicOption{
 // JaegerReporter creates a new jaeger reporter that sends to the given Jaeger endpoint address.
 type JaegerReporter string
 
-func (opt JaegerReporter) apply(_ *Server) error {
-	je, err := jaeger.NewExporter(jaeger.Options{
-		CollectorEndpoint: string(opt),
-		Process: jaeger.Process{
-			ServiceName: "mtail",
-		},
-	})
-	if err != nil {
-		return err
-	}
-	trace.RegisterExporter(je)
-	return nil
-}
+func (opt JaegerReporter) apply(_ *Server) error { _ = "STUB: not implemented"; return nil }
 
 // MetricPushInterval sets the interval between metrics pushes to passive collectors.
 type MetricPushInterval time.Duration
 
-func (opt MetricPushInterval) apply(m *Server) error {
-	m.eOpts = append(m.eOpts, exporter.PushInterval(time.Duration(opt)))
-	return nil
-}
+func (opt MetricPushInterval) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // MaxRegexpLength sets the maximum length an mtail regular expression can have, in terms of characters.
 type MaxRegexpLength int
 
-func (opt MaxRegexpLength) apply(m *Server) error {
-	m.rOpts = append(m.rOpts, runtime.MaxRegexpLength(int(opt)))
-	return nil
-}
+func (opt MaxRegexpLength) apply(m *Server) error { _ = "STUB: not implemented"; return nil }
 
 // MaxRecursionDepth sets the maximum depth the abstract syntax tree built during lexation can have.
 type MaxRecursionDepth int
 
-func (opt MaxRecursionDepth) apply(m *Server) error {
-	m.rOpts = append(m.rOpts, runtime.MaxRecursionDepth(int(opt)))
-	return nil
-}
+func (opt MaxRecursionDepth) apply(m *Server) error { _ = "STUB: not implemented"; return nil }

@@ -7,9 +7,4 @@ import (
 	"testing"
 )
 
-func SkipIfShort(tb testing.TB) {
-	tb.Helper()
-	if testing.Short() {
-		tb.Skip("skipping test in -short mode")
-	}
-}
+func SkipIfShort(tb testing.TB) { _ = "STUB: not implemented"; return }

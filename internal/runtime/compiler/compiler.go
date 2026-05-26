@@ -5,15 +5,8 @@ package compiler
 
 import (
 	"io"
-	"path/filepath"
 
-	"github.com/golang/glog"
 	"github.com/google/mtail/internal/runtime/code"
-	"github.com/google/mtail/internal/runtime/compiler/ast"
-	"github.com/google/mtail/internal/runtime/compiler/checker"
-	"github.com/google/mtail/internal/runtime/compiler/codegen"
-	"github.com/google/mtail/internal/runtime/compiler/opt"
-	"github.com/google/mtail/internal/runtime/compiler/parser"
 )
 
 type Compiler struct {
@@ -24,115 +17,34 @@ type Compiler struct {
 	disableOptimisation bool
 }
 
-func New(options ...Option) (*Compiler, error) {
-	c := &Compiler{}
-	if err := c.SetOption(options...); err != nil {
-		return nil, err
-	}
-	return c, nil
-}
+func New(options ...Option) (*Compiler, error) { _ = "STUB: not implemented"; return nil, nil }
 
-func (c *Compiler) SetOption(options ...Option) error {
-	for _, option := range options {
-		if err := option(c); err != nil {
-			return err
-		}
-	}
-	return nil
-}
+func (c *Compiler) SetOption(options ...Option) error { _ = "STUB: not implemented"; return nil }
 
 // Option configures a new Compiler.
 type Option func(*Compiler) error
 
 // EmitAst emits the AST after the parse phase.
-func EmitAst() Option {
-	return func(c *Compiler) error {
-		c.emitAst = true
-		return nil
-	}
-}
+func EmitAst() Option { _ = "STUB: not implemented"; return *new(Option) }
 
 // EmitAstTypes emits the AST with types after the type checking phase.
-func EmitAstTypes() Option {
-	return func(c *Compiler) error {
-		c.emitAstTypes = true
-		return nil
-	}
-}
+func EmitAstTypes() Option { _ = "STUB: not implemented"; return *new(Option) }
 
 // MaxRegexpLength sets the maximum allowable length of a regular expression.
-func MaxRegexpLength(maxRegexpLength int) Option {
-	return func(c *Compiler) error {
-		c.maxRegexpLength = maxRegexpLength
-		return nil
-	}
-}
+func MaxRegexpLength(maxRegexpLength int) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 // MaxRecursionDepth sets the maximum allowable depth of the AST.
 func MaxRecursionDepth(maxRecursionDepth int) Option {
-	return func(c *Compiler) error {
-		c.maxRecursionDepth = maxRecursionDepth
-		return nil
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
 // DisableOptimisation disables the optimisation phase.
-func DisableOptimisation() Option {
-	return func(c *Compiler) error {
-		c.disableOptimisation = true
-		return nil
-	}
-}
+func DisableOptimisation() Option { _ = "STUB: not implemented"; return *new(Option) }
 
 // Compile compiles a program from the input into bytecode and data stored in an Object, or a list
 // of compile errors.
 func (c *Compiler) Compile(name string, input io.Reader) (obj *code.Object, err error) {
-	name = filepath.Base(name)
-
-	var ast ast.Node
-
-	ast, err = parser.Parse(name, input)
-	if err != nil {
-		return
-	}
-	if c.emitAst {
-		s := parser.Sexp{}
-		glog.Infof("%s AST:\n%s", name, s.Dump(ast))
-	}
-
-	if !c.disableOptimisation {
-		ast, err = opt.Optimise(ast)
-		if err != nil {
-			return
-		}
-		if c.emitAstTypes {
-			s := parser.Sexp{}
-			glog.Infof("Post optimisation %s AST:\n%s", name, s.Dump(ast))
-		}
-	}
-
-	ast, err = checker.Check(ast, c.maxRegexpLength, c.maxRecursionDepth)
-	if err != nil {
-		return
-	}
-	if c.emitAstTypes {
-		s := parser.Sexp{}
-		s.EmitTypes = true
-		glog.Infof("%s AST with Type Annotation:\n%s", name, s.Dump(ast))
-	}
-
-	if !c.disableOptimisation {
-		ast, err = opt.Optimise(ast)
-		if err != nil {
-			return
-		}
-		if c.emitAstTypes {
-			s := parser.Sexp{}
-			s.EmitTypes = true
-			glog.Infof("Post optimisation %s AST with Type Annotation:\n%s", name, s.Dump(ast))
-		}
-	}
-
-	obj, err = codegen.CodeGen(name, ast)
-	return
+	_ = "STUB: not implemented"
+	return nil, nil
 }

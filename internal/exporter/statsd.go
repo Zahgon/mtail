@@ -6,7 +6,6 @@ package exporter
 import (
 	"expvar"
 	"flag"
-	"fmt"
 	"time"
 
 	"github.com/google/mtail/internal/metrics"
@@ -25,18 +24,12 @@ var (
 // metricToStatsd encodes a metric in the statsd text protocol format.  The
 // metric lock is held before entering this function.
 func metricToStatsd(_ string, m *metrics.Metric, l *metrics.LabelSet, _ time.Duration) string {
-	var t string
-	switch m.Kind {
-	case metrics.Counter:
-		t = "c" // StatsD Counter
-	case metrics.Gauge:
-		t = "g" // StatsD Gauge
-	case metrics.Timer:
-		t = "ms" // StatsD Timer
-	}
-	return fmt.Sprintf("%s%s.%s:%s|%s",
-		*statsdPrefix,
-		m.Program,
-		formatLabels(m.Name, l.Labels, ".", ".", "_"),
-		l.Datum.ValueString(), t)
+	_ = "STUB: not implemented"
+	return ""
 }
+
+// StatsD Counter
+
+// StatsD Gauge
+
+// StatsD Timer
